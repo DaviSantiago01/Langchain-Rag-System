@@ -37,7 +37,7 @@ Um sistema de **Retrieval-Augmented Generation (RAG)** que permite fazer pergunt
 - Usuário faz uma pergunta
 - Sistema converte pergunta em embedding
 - Busca os 3 chunks mais similares no banco
-- Filtra resultados por relevância (score > 0.5)
+- Filtra resultados por relevância (score > 0.5
 - Envia contexto + pergunta para GPT-4
 - Retorna resposta baseada apenas nos documentos
 
