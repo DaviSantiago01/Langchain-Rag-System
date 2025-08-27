@@ -197,21 +197,8 @@ python criar_db.py  # Recrie o banco
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-
-## 👨‍💻 Autor
-
-**Seu Nome**
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- LinkedIn: [Seu Perfil](https://linkedin.com/in/seu-perfil)
-
 ## 🙏 Agradecimentos
 
-- [LangChain](https://langchain.com/) pela excelente framework
-- [ChromaDB](https://www.trychroma.com/) pelo banco vetorial eficiente
-- [OpenAI](https://openai.com/) pelos modelos de IA
 - [Agente de IA completo com Python - Projeto RAG com Langchain](https://www.youtube.com/watch?v=0M8iO5ykY-E&t=1760s) - Tutorial que inspirou este projeto
 
 ---
