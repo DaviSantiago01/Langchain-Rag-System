@@ -9,19 +9,25 @@ Um sistema de **Retrieval-Augmented Generation (RAG)** que permite fazer pergunt
 - **🧠 IA Conversacional**: Responde perguntas baseadas exclusivamente no conteúdo dos documentos
 - **💾 Banco Vetorial**: Armazena embeddings usando ChromaDB para buscas eficientes
 - **⚡ Respostas Contextuais**: Fornece respostas precisas com base no contexto dos documentos
+- **🌐 Interface Web**: Interface gráfica moderna com Streamlit para facilitar o uso
+- **📊 Dashboard Interativo**: Visualização em tempo real do status do banco e respostas
 
 ## 🏗️ Arquitetura
 
 ```
 📁 Projeto RAG
-├── 📄 main.py              # Sistema principal de perguntas e respostas
+├── 📄 main.py              # Sistema principal de perguntas e respostas (CLI)
+├── 📄 app_streamlit.py     # Interface web moderna com Streamlit
 ├── 📄 criar_db.py          # Criação e população do banco vetorial
 ├── 📁 base/                # Pasta para documentos PDF
-│   └── 📄 *.pdf           # Seus documentos PDF
+│   ├── 📄 *.pdf           # Seus documentos PDF
+│   └── 📄 README.md        # Instruções para adicionar PDFs
 ├── 📁 db/                  # Banco de dados ChromaDB
 │   ├── 📄 chroma.sqlite3   # Banco SQLite do Chroma
 │   └── 📁 collections/     # Coleções de embeddings
 ├── 📄 .env                 # Variáveis de ambiente
+├── 📄 requirements.txt     # Dependências do projeto
+├── 📄 .gitignore          # Arquivos ignorados pelo Git
 └── 📁 venv/                # Ambiente virtual Python
 ```
 
@@ -68,8 +74,13 @@ source venv/bin/activate
 
 ### 3. Instale as dependências
 ```bash
+pip install -r requirements.txt
+```
+
+Ou instale manualmente:
+```bash
 pip install langchain langchain-openai langchain-chroma langchain-community
-pip install chromadb pypdf python-dotenv
+pip install chromadb pypdf python-dotenv streamlit
 ```
 
 ### 4. Configure as variáveis de ambiente
@@ -94,7 +105,20 @@ Este comando irá:
 - Criar embeddings
 - Salvar no banco ChromaDB
 
-### 2. **Fazer Perguntas**
+### 2. **Opção A: Interface Web (Recomendado) 🌐**
+```bash
+streamlit run app_streamlit.py
+```
+**Funcionalidades da Interface Web:**
+- 🎨 **Interface moderna e intuitiva**
+- 📊 **Status do banco em tempo real**
+- 🔄 **Indicadores de carregamento**
+- 💬 **Chat interativo com a IA**
+- 📱 **Responsivo para mobile**
+- ℹ️ **Instruções integradas na barra lateral**
+- ✅ **Validação automática de entrada**
+
+### 2. **Opção B: Terminal (CLI) 💻**
 ```bash
 python main.py
 ```
@@ -102,6 +126,24 @@ Digite suas perguntas e receba respostas baseadas nos documentos!
 
 ## 💡 Exemplo de Uso
 
+### 🌐 Interface Web (Streamlit)
+```bash
+$ streamlit run app_streamlit.py
+
+  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.100:8501
+```
+
+**Na interface web você verá:**
+- 📚 Título: "Sistema de Perguntas e Respostas"
+- ✅ Status: "Banco de dados encontrado!"
+- 🤔 Campo: "Sua pergunta:"
+- 🔍 Botão: "Buscar Resposta"
+- 🤖 Resposta formatada com markdown
+
+### 💻 Terminal (CLI)
 ```
 $ python main.py
 Digite sua pergunta: Quais são os principais benefícios do Python?
@@ -147,19 +189,28 @@ if resultados[0][1] < 0.5:  # Altere o threshold
 | **ChromaDB** | Banco de dados vetorial |
 | **OpenAI GPT-4** | Modelo de linguagem |
 | **OpenAI Embeddings** | Conversão texto → vetores |
+| **Streamlit** | Interface web moderna e interativa |
 | **PyPDF** | Leitura de documentos PDF |
 | **Python-dotenv** | Gerenciamento de variáveis de ambiente |
 
 ## 🔍 Estrutura do Código
 
-### `main.py` - Sistema Principal
+### `app_streamlit.py` - Interface Web 🌐
+- **`main()`**: Função principal da interface Streamlit
+- **`conectar_banco()`**: Conecta ao ChromaDB com cache de sessão
+- **`buscar_resposta()`**: Processa consultas via interface web
+- Interface moderna com sidebar, spinners e validações
+- Status em tempo real do banco de dados
+- Experiência de usuário otimizada
+
+### `main.py` - Sistema Terminal 💻
 - **`perguntar()`**: Função principal que processa consultas
 - Conecta ao banco ChromaDB
 - Realiza busca semântica
 - Filtra por relevância
 - Gera resposta contextual
 
-### `criar_db.py` - Criação do Banco
+### `criar_db.py` - Criação do Banco 🗄️
 - **`carregar_documentos()`**: Lê PDFs da pasta base
 - **`dividir_documentos()`**: Divide em chunks menores
 - **`vetorizar_chunks()`**: Cria embeddings e salva no banco
