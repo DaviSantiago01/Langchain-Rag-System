@@ -212,6 +212,7 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 - [LangChain](https://langchain.com/) pela excelente framework
 - [ChromaDB](https://www.trychroma.com/) pelo banco vetorial eficiente
 - [OpenAI](https://openai.com/) pelos modelos de IA
+- [Agente de IA completo com Python - Projeto RAG com Langchain](https://www.youtube.com/watch?v=0M8iO5ykY-E&t=1760s) - Tutorial que inspirou este projeto
 
 ---
 
