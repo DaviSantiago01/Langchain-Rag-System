@@ -92,7 +92,7 @@ def perguntar():
 
         # 7. Enviar para modelo de IA
         print("Consultando IA...")
-        modelo = ChatOpenAI(model="gpt-5-nano")  # Inicializa modelo específico da OpenAI (gpt-4o-mini = versão do modelo)
+        modelo = ChatOpenAI(model="gpt-5-nano", temperature = 1, tokens = 524)  # Inicializa modelo específico da OpenAI (gpt-4o-mini = versão do modelo)
         resposta = modelo.invoke(prompt_formatado)  # .invoke() = chama a IA com o prompt
         
         # 8. Exibir resposta
