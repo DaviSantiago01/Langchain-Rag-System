@@ -7,7 +7,7 @@ import os
 
 load_dotenv()
 
-DB_PATH = "db"
+DB_PATH = "chroma_db"
 
 PROMPT_TEMPLATE = """ 
 Analise os documentos abaixo e responda a pergunta do usuário.
@@ -184,69 +184,67 @@ def exibir_criar_db():
             st.error("❌ Nenhum arquivo PDF encontrado! Adicione arquivos primeiro.")
             return
         
-        # Executar o script criar_db.py e mostrar progresso
-        executar_criar_db()
-
-def executar_criar_db():
-    """Executa o script criar_db.py e mostra o progresso em tempo real"""
-    import subprocess
-    import sys
-    
-    # Container para mostrar progresso
-    progress_container = st.container()
-    
-    with progress_container:
-        st.write("🔄 **Executando script criar_db.py...**")
+        # Executar o script criar_db.py e mostrar progresso em tempo real
+        import subprocess
+        import sys
         
-        # Placeholder para output
-        output_placeholder = st.empty()
+        # Container para mostrar progresso
+        progress_container = st.container()
         
-        try:
-            # Executar o script criar_db.py
-            process = subprocess.Popen(
-                [sys.executable, "criar_db.py"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1,
-                universal_newlines=True
-            )
+        with progress_container:
+            st.write("🔄 **Executando script criar_db.py...**")
             
-            # Capturar output em tempo real
-            output_lines = []
+            # Placeholder para output
+            output_placeholder = st.empty()
             
-            with st.spinner("Processando..."):
-                for line in iter(process.stdout.readline, ''):
-                    if line:
-                        output_lines.append(line.strip())
-                        # Mostrar as últimas 10 linhas
-                        recent_output = "\n".join(output_lines[-10:])
-                        output_placeholder.code(recent_output)
+            try:
+                # Executar o script criar_db.py
+                process = subprocess.Popen(
+                    [sys.executable, "criar_db.py"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                    universal_newlines=True
+                )
                 
-                process.wait()
-            
-            # Verificar resultado
-            if process.returncode == 0:
-                st.success("🎉 Banco de dados criado com sucesso!")
-                st.balloons()
+                # Capturar output em tempo real
+                output_lines = []
                 
-                # Verificar se o banco foi realmente criado
-                if os.path.exists(DB_PATH):
-                    st.info("✨ Agora você pode fazer perguntas na Tela Principal!")
+                with st.spinner("Processando..."):
+                    for line in iter(process.stdout.readline, ''):
+                        if line:
+                            output_lines.append(line.strip())
+                            # Mostrar as últimas 10 linhas
+                            recent_output = "\n".join(output_lines[-10:])
+                            output_placeholder.code(recent_output)
+                    
+                    process.wait()
+                
+                # Verificar resultado
+                if process.returncode == 0:
+                    st.success("🎉 Banco de dados criado com sucesso!")
+                    st.balloons()
+                    
+                    # Verificar se o banco foi realmente criado
+                    if os.path.exists(DB_PATH):
+                        st.info("✨ Agora você pode fazer perguntas na Tela Principal!")
+                    else:
+                        st.warning("⚠️ Script executado, mas banco não encontrado.")
                 else:
-                    st.warning("⚠️ Script executado, mas banco não encontrado.")
-            else:
-                st.error(f"❌ Erro na execução (código: {process.returncode})")
-                
-        except FileNotFoundError:
-            st.error("❌ Arquivo criar_db.py não encontrado!")
-            st.info("💡 Certifique-se que o arquivo criar_db.py está na mesma pasta.")
-        except Exception as e:
-            st.error(f"❌ Erro ao executar script: {str(e)}")
-            st.write("**Possíveis soluções:**")
-            st.write("• Verifique se o arquivo criar_db.py existe")
-            st.write("• Verifique se todas as dependências estão instaladas")
-            st.write("• Execute manualmente: python criar_db.py")
+                    st.error(f"❌ Erro na execução (código: {process.returncode})")
+                    
+            except FileNotFoundError:
+                st.error("❌ Arquivo criar_db.py não encontrado!")
+                st.info("💡 Certifique-se que o arquivo criar_db.py está na mesma pasta.")
+            except Exception as e:
+                st.error(f"❌ Erro ao executar script: {str(e)}")
+                st.write("**Possíveis soluções:**")
+                st.write("• Verifique se o arquivo criar_db.py existe")
+                st.write("• Verifique se todas as dependências estão instaladas")
+                st.write("• Execute manualmente: python criar_db.py")
+
+
 
 def main():
     st.set_page_config(
