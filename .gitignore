@@ -132,6 +132,9 @@ venv.bak/
 config_usuario.json
 .env
 
+# Banco de dados vetorial (arquivos grandes)
+chroma_db/
+
 # Spyder project settings
 .spyderproject
 .spyproject
