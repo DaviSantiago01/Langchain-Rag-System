@@ -10,6 +10,17 @@ Sistema de perguntas e respostas sobre documentos PDF usando inteligência artif
    ```
 
 2. **Configure sua API Key da OpenAI**
+   
+   **Opção 1: Arquivo de configuração (Recomendado)**
+   ```bash
+   # Copie o arquivo de exemplo
+   cp config_usuario.json.example config_usuario.json
+   
+   # Edite o arquivo e adicione sua API key
+   # IMPORTANTE: Este arquivo está no .gitignore por segurança
+   ```
+   
+   **Opção 2: Variável de ambiente**
    ```bash
    # Crie um arquivo .env na raiz do projeto
    OPENAI_API_KEY=sua_chave_aqui
@@ -18,15 +29,12 @@ Sistema de perguntas e respostas sobre documentos PDF usando inteligência artif
 3. **Adicione seus PDFs**
    - Coloque os arquivos PDF na pasta `base/`
 
-4. **Crie o banco de dados**
-   ```bash
-   python criar_db.py
-   ```
-
-5. **Execute a aplicação**
+4. **Execute a aplicação**
    ```bash
    streamlit run app_streamlit.py
    ```
+   
+   O banco de dados será criado automaticamente na primeira execução.
 
 ## Documentação
 

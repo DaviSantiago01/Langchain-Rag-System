@@ -7,7 +7,7 @@ Você coloca PDFs, faz perguntas, e o sistema responde baseado no conteúdo dos 
 
 ### 📄 Com PDFs
 - Lê todos os PDFs da pasta `base/`
-- F  arquivos ao mesmo tempo
+- Vários arquivos ao mesmo tempo
 - Extrai todo o texto automaticamente
 
 ### 🧠 Busca Inteligente
