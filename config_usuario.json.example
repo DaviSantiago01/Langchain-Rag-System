@@ -1,7 +1,0 @@
-{
-  "api_key": "sua_api_key_openai_aqui",
-  "modelo": "gpt-4o-mini",
-  "temperatura": 0.1,
-  "max_tokens": 1000,
-  "timeout": 30
-}
