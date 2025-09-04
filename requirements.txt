@@ -1,4 +1,4 @@
-streamlit==1.39.0
-langchain-chroma==0.1.4
-langchain-openai==0.2.8
-pysqlite3-binary==0.5.2
+streamlit==1.49.1
+langchain-chroma==0.2.5
+langchain-openai==0.3.32
+pysqlite3-binary==0.5.4
