@@ -1,162 +1,126 @@
+# -*- coding: utf-8 -*-
+"""
+Interface Streamlit para Banco Vetorial - Versão Educacional Simplificada
+Apenas 3 funções essenciais para iniciantes em Python
+"""
+
 import os
 import streamlit as st
-from langchain_chroma import Chroma
-from langchain_openai import OpenAIEmbeddings
-from db_engine import MotorBanco
-from config import *
+from db_engine import criar_banco_vetorial, listar_documentos
+from config import PASTA_BASE
 
-class InterfaceStreamlit:
-    """Interface simples para o Streamlit"""
+# =============================================================================
+# FUNÇÕES DE INTERFACE - VERSÃO EDUCACIONAL SIMPLIFICADA
+# =============================================================================
+
+def mostrar_upload_interface():
+    """
+    Interface simplificada para upload de arquivos PDF.
+    Função educacional para iniciantes.
+    """
+    st.subheader("📁 Upload de Documentos")
     
-    def __init__(self, caminho_banco):
-        self.caminho_banco = caminho_banco
-        self.motor_banco = MotorBanco(PASTA_BASE, caminho_banco)
+    # Upload de arquivos
+    arquivos_enviados = st.file_uploader(
+        "Selecione arquivos PDF:",
+        type=['pdf'],
+        accept_multiple_files=True,
+        help="Escolha um ou mais arquivos PDF para análise"
+    )
     
-    def mostrar_estatisticas_banco(self):
-        """Mostra estatísticas básicas do banco"""
-        if not os.path.exists(self.caminho_banco):
-            st.warning("⚠️ Banco não encontrado")
-            return
+    if arquivos_enviados:
+        # Criar pasta se não existir
+        if not os.path.exists(PASTA_BASE):
+            os.makedirs(PASTA_BASE)
         
-        try:
-            banco = Chroma(persist_directory=self.caminho_banco, embedding_function=OpenAIEmbeddings())
-            total = banco._collection.count()
-            st.success(f"✅ Banco ativo com {total:,} chunks")
-        except Exception as e:
-            st.error(f"❌ Erro ao acessar banco: {str(e)}")
-    
-    def mostrar_gerenciamento_arquivos(self):
-        """Interface simples para gerenciar arquivos PDF"""
-        from config import PASTA_BASE
-        import os
-        
-        st.markdown("### 📁 Gerenciar Arquivos PDF")
-        
-        # Upload simples
-        arquivos = st.file_uploader("Adicionar PDFs:", type=['pdf'], accept_multiple_files=True)
-        
-        if arquivos and st.button("📥 Salvar", type="primary"):
-            if not os.path.exists(PASTA_BASE):
-                os.makedirs(PASTA_BASE)
-            
-            for arquivo in arquivos:
-                with open(os.path.join(PASTA_BASE, arquivo.name), "wb") as f:
-                    f.write(arquivo.getbuffer())
-            
-            st.success(f"✅ {len(arquivos)} arquivo(s) salvos!")
-            st.rerun()
-        
-        # Lista simples de arquivos
-        if os.path.exists(PASTA_BASE):
-            pdfs = [f for f in os.listdir(PASTA_BASE) if f.endswith('.pdf')]
-            if pdfs:
-                st.info(f"📊 {len(pdfs)} arquivos encontrados")
-                for pdf in pdfs:
-                    col1, col2 = st.columns([4, 1])
-                    col1.text(f"📄 {pdf}")
-                    if col2.button("🗑️", key=f"del_{pdf}"):
-                        os.remove(os.path.join(PASTA_BASE, pdf))
-                        st.success(f"✅ {pdf} removido!")
-                        st.rerun()
-            else:
-                st.warning("📂 Nenhum PDF encontrado")
-        else:
-            st.info("📂 Faça upload de arquivos para começar")
-    
-    def mostrar_interface_criacao_banco(self):
-        """Interface simples para criar banco vetorial"""
-        from config import validar_requisitos
-        
-        st.markdown("### 🚀 Criar Banco Vetorial")
-        
-        # Verificar se já está criando banco
-        if 'criando_banco' not in st.session_state:
-            st.session_state.criando_banco = False
-        
-        if st.session_state.criando_banco:
-            st.warning("⏳ Criação em andamento... Aguarde!")
-            return False
-        
-        # Verificar requisitos simples
-        requisitos = validar_requisitos()
-        
-        for nome, status in requisitos.items():
-            if status:
-                st.success(f"✅ {nome.replace('_', ' ').title()}")
-            else:
-                st.error(f"❌ {nome.replace('_', ' ').title()}")
-        
-        # Botão de criação
-        if all(requisitos.values()):
-            if st.button("🚀 Criar Banco", type="primary", use_container_width=True):
-                st.session_state.criando_banco = True
-                with st.spinner("Criando banco..."):
-                    sucesso = self._executar_criacao()
+        # Salvar arquivos
+        if st.button("💾 Salvar Arquivos", type="primary"):
+            try:
+                for arquivo in arquivos_enviados:
+                    caminho_arquivo = os.path.join(PASTA_BASE, arquivo.name)
+                    with open(caminho_arquivo, "wb") as f:
+                        f.write(arquivo.getbuffer())
                 
-                st.session_state.criando_banco = False
+                st.success(f"✅ {len(arquivos_enviados)} arquivo(s) salvos com sucesso!")
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ Erro ao salvar arquivos: {str(e)}")
+
+
+def mostrar_lista_interface():
+    """
+    Interface simplificada para listar e remover documentos.
+    Função educacional para iniciantes.
+    """
+    st.subheader("📋 Documentos Salvos")
+    
+    # Listar documentos
+    documentos = listar_documentos()
+    
+    if not documentos:
+        st.info("📝 Nenhum documento encontrado. Faça upload de arquivos PDF primeiro.")
+        return
+    
+    st.write(f"**Total de documentos:** {len(documentos)}")
+    
+    # Mostrar lista de documentos
+    for i, doc in enumerate(documentos):
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            st.write(f"📄 {doc}")
+        
+        with col2:
+            if st.button("🗑️ Remover", key=f"remove_{i}"):
+                try:
+                    caminho_arquivo = os.path.join(PASTA_BASE, doc)
+                    if os.path.exists(caminho_arquivo):
+                        os.remove(caminho_arquivo)
+                        st.success(f"✅ {doc} removido com sucesso!")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ Arquivo {doc} não encontrado.")
+                except Exception as e:
+                    st.error(f"❌ Erro ao remover {doc}: {str(e)}")
+
+
+def mostrar_criar_banco_interface(api_key):
+    """
+    Interface simplificada para criar o banco vetorial.
+    Função educacional para iniciantes.
+    
+    Args:
+        api_key (str): Chave da API da OpenAI
+    """
+    st.subheader("🏗️ Criar Banco Vetorial")
+    
+    # Verificar se há documentos
+    documentos = listar_documentos()
+    
+    if not documentos:
+        st.warning("⚠️ Nenhum documento encontrado. Faça upload de PDFs primeiro.")
+        return
+    
+    # Verificar API key
+    if not api_key:
+        st.warning("⚠️ Configure sua chave da API OpenAI primeiro.")
+        return
+    
+    # Mostrar informações
+    st.info(f"📊 {len(documentos)} documento(s) pronto(s) para processamento")
+    
+    # Botão para criar banco
+    if st.button("🚀 Criar Banco Vetorial", type="primary"):
+        with st.spinner("Processando documentos... Isso pode levar alguns minutos."):
+            try:
+                sucesso = criar_banco_vetorial(api_key)
                 
                 if sucesso:
-                    st.success("✅ Banco criado com sucesso!")
-                    if st.button("🏠 Ir para Chat", type="primary"):
-                        st.session_state.menu_opcao = "🏠 Tela Principal"
-                        st.rerun()
-                return sucesso
-        else:
-            st.error("❌ Complete os requisitos acima")
-        
-        return False
-    
-    def mostrar_status_banco_completo(self):
-        """Mostra status simples do banco"""
-        import os
-        
-        st.markdown("### 📊 Status do Banco")
-        
-        if os.path.exists(self.caminho_banco):
-            self.mostrar_estatisticas_banco()
-        else:
-            st.warning("⚠️ Banco não encontrado")
-            st.info("Crie o banco na aba 'Criar Banco'")
-    
-    def _executar_criacao(self):
-        """Executa criação do banco de forma simples"""
-        barra = st.progress(0)
-        status = st.empty()
-        
-        try:
-            def callback(etapa, msg):
-                progresso = {
-                    "INICIO": 0.05, "DESCOBERTA": 0.1, "CLEANUP": 0.2, "LIMPEZA": 0.2,
-                    "CARREGAMENTO": 0.3, "CARREGAMENTO_COMPLETO": 0.4, "DIVISAO": 0.5,
-                    "EMBEDDINGS": 0.7, "BANCO": 0.8, "CONCLUIDO": 1.0
-                }.get(etapa, 0.5)
-                
-                barra.progress(progresso)
-                
-                # Mostrar mensagens mais detalhadas
-                if etapa == "ERRO":
-                    status.error(f"❌ {msg}")
-                elif etapa == "CLEANUP":
-                    status.info(f"🧹 {msg}")
-                elif etapa == "CARREGAMENTO_COMPLETO":
-                    # Mostrar detalhes dos arquivos em uma área expansível
-                    with st.expander("📄 Detalhes dos Arquivos Processados", expanded=False):
-                        st.text(msg)
-                    status.success("✅ Arquivos carregados com sucesso!")
+                    st.success("🎉 Banco vetorial criado com sucesso!")
+                    st.balloons()
                 else:
-                    status.text(f"🔄 {msg}")
-            
-            sucesso = self.motor_banco.criar_banco_com_progresso(callback)
-            
-            if sucesso:
-                status.text("✅ Banco criado!")
-                st.success("✨ Vá para a Tela Principal e teste!")
-                return True
-            else:
-                status.text("❌ Erro na criação")
-                st.error("❌ Falha na criação do banco")
-                return False
-        except Exception as e:
-            status.text("❌ Erro")
-            st.error(f"❌ Erro: {str(e)}")
-            return False
+                    st.error("❌ Erro ao criar banco vetorial. Verifique os documentos e tente novamente.")
+                    
+            except Exception as e:
+                st.error(f"❌ Erro inesperado: {str(e)}")
