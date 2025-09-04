@@ -2,3 +2,6 @@ streamlit==1.49.1
 langchain-chroma==0.2.5
 langchain-openai==0.3.32
 pysqlite3-binary==0.5.4
+langchain-community==0.3.29
+langchain==0.3.27
+langchain-text-splitters==0.3.11

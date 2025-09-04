@@ -7,7 +7,7 @@ Apenas funções essenciais para iniciantes em Python
 import os
 import shutil
 from langchain_community.document_loaders import PyPDFDirectoryLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
 from openai import OpenAI
