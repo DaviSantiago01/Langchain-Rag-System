@@ -4,6 +4,16 @@ Aplicação RAG Educacional - Versão Simplificada
 Apenas 3 telas básicas para iniciantes em Python
 """
 
+# Correção para SQLite3 no Streamlit Cloud
+# Substitui o módulo sqlite3 padrão pelo pysqlite3-binary apenas quando disponível
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    # pysqlite3 não disponível (ambiente local), usar sqlite3 padrão
+    pass
+
 import streamlit as st
 from db_engine import buscar_resposta, verificar_banco_existe
 from db_streamlit import mostrar_upload_interface, mostrar_lista_interface, mostrar_criar_banco_interface

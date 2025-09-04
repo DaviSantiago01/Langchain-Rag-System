@@ -12,6 +12,21 @@ def test_imports():
     """Testa todas as importações críticas"""
     print("🔍 Testando importações...")
     
+    # Teste 0: Correção SQLite3 (simulando Streamlit Cloud)
+    print("🔧 Testando correção SQLite3...")
+    try:
+        # Simula a correção que será aplicada no Streamlit Cloud
+        try:
+            __import__('pysqlite3')
+            import sys
+            sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+            print("✅ Correção SQLite3 aplicada (pysqlite3 disponível)")
+        except ImportError:
+            print("ℹ️ pysqlite3 não disponível (ambiente local - OK)")
+    except Exception as e:
+        print(f"❌ Erro na correção SQLite3: {e}")
+    
+    # Teste 1: Streamlit
     try:
         import streamlit as st
         print("✅ Streamlit importado com sucesso")
