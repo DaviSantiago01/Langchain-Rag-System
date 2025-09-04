@@ -6,16 +6,11 @@ Apenas funções essenciais para iniciantes em Python
 
 import os
 import shutil
-try:
-    from langchain_community.document_loaders import PyPDFDirectoryLoader
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
-    from langchain_openai import OpenAIEmbeddings
-    from langchain_chroma import Chroma
-    from openai import OpenAI
-except ImportError as e:
-    import streamlit as st
-    st.error(f"Erro ao importar dependências: {e}")
-    st.stop()
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_chroma import Chroma
+from openai import OpenAI
 
 from config import PASTA_BASE, CAMINHO_BANCO, TAMANHO_PEDACO, SOBREPOSICAO_PEDACO, MODELO_OPENAI
 

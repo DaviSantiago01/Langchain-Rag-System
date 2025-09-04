@@ -5,16 +5,9 @@ Apenas 3 telas básicas para iniciantes em Python
 """
 
 import streamlit as st
-
-# Tratamento de importações com mensagens de erro claras
-try:
-    from db_engine import buscar_resposta, verificar_banco_existe
-    from db_streamlit import mostrar_upload_interface, mostrar_lista_interface, mostrar_criar_banco_interface
-    from config import validar_api_key
-except ImportError as e:
-    st.error(f"❌ Erro ao importar módulos: {str(e)}")
-    st.error("Verifique se todos os arquivos estão presentes: config.py, db_engine.py, db_streamlit.py")
-    st.stop()
+from db_engine import buscar_resposta, verificar_banco_existe
+from db_streamlit import mostrar_upload_interface, mostrar_lista_interface, mostrar_criar_banco_interface
+from config import validar_api_key
 
 # =============================================================================
 # CONFIGURAÇÃO DA PÁGINA
